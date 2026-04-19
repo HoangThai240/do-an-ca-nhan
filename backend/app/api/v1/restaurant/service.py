@@ -25,14 +25,29 @@ def get_all_menu():
     return menus_schema.dump(Menu.query.all())
 
 def create_food(data):
-    errors = menu_schema.validate(data)
-    if errors:
-        return {"error": errors}
+    try:
+        food = Menu(
+            name=data.get("name"),
+            price=data.get("price"),
+            image=data.get("image"),
+            category=data.get("category"),
+            visible=True
+        )
 
-    food = Menu(**data)
-    db.session.add(food)
-    db.session.commit()
-    return menu_schema.dump(food)
+        db.session.add(food)
+        db.session.commit()
+
+        print("ĐÃ THÊM:", food.name)
+
+        return {
+            "msg": "Thêm thành công",
+            "id": food.id
+        }
+
+    except Exception as e:
+        db.session.rollback()
+        print("LỖI DB:", e)
+        return {"error": str(e)}
 
 def delete_food(id):
     food = Menu.query.get(id)
@@ -195,6 +210,31 @@ def get_booking_by_table_service(id):
     bookings = Booking.query.filter_by(table_id=id).all()
     return bookings_schema.dump(bookings)
 
+def update_food(id, data):
+    food = Menu.query.get(id)
+
+    if not food:
+        return {"error": "Food not found"}
+
+    # cập nhật dữ liệu
+    food.name = data.get("name", food.name)
+    food.price = data.get("price", food.price)
+    food.image = data.get("image", food.image)
+    food.category = data.get("category", food.category)
+
+    db.session.commit()
+
+    return {
+        "msg": "Updated",
+        "data": {
+            "id": food.id,
+            "name": food.name,
+            "price": food.price,
+            "image": food.image,
+            "category": food.category
+        }
+    }
+
 class RestaurantService:
     @staticmethod
     def create(data, is_admin=False):
@@ -226,4 +266,5 @@ class RestaurantService:
         except Exception as e:
             db.session.rollback()
             return {"message": f"Lỗi hệ thống: {str(e)}"}, 500
+
 

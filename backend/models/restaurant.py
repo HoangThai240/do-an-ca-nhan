@@ -1,6 +1,6 @@
 from core.extensions import db
 from datetime import datetime
-
+from models.cuisine import Cuisine
 
 class Restaurant(db.Model):
     __tablename__ = 'Restaurant'

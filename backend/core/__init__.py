@@ -11,7 +11,6 @@ from models.table import Table
 from models.confirmbooking import Booking
 from models.menu import Menu
 from models.food import Food
-from models.tables import Tables   # 🔥 bắt buộc
 from models.booking import Reservation
 
 
