@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Nhà Hàng</title>
-    <link rel="stylesheet" href="/frontend/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
@@ -31,8 +31,31 @@ const menuContainer = document.getElementById('menuContainer');
 // ===== LOAD MENU =====
 async function loadMenu() {
 
+        const token = localStorage.getItem('token');
+
+        // Nếu không có token, thoát ra trang đăng nhập luôn
+        if (!token) {
+            alert("Bạn chưa đăng nhập!");
+            window.location.href = "login.html";
+            return;
+        }
+
         try {
             const res = await fetch("http://127.0.0.1:5000/api/v1/restaurant/menu/admin", {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!res.ok) {
+                if (res.status === 401 || res.status === 403) {
+                    alert("Bạn không có quyền truy cập hoặc phiên đăng nhập đã hết hạn!");
+                    return;
+                }
+                throw new Error("Lỗi server");
+            }
 
         const data = await res.json();
 
