@@ -7,6 +7,9 @@ from models.review import Review
 from core.extensions import db
 from models.user import User
 from app.api.v1.customer.service import get_all_restaurants, get_restaurant_by_id
+from models.table import Table
+from models.restaurant import Restaurant
+from models.booking import Reservation
 
 
 # HTML pages
@@ -117,8 +120,8 @@ def book():
     restaurant_id = data.get("restaurant_id")
 
     # Check table tồn tại và thuộc restaurant
-    tables = Tables.query.get(table_id)
-    if not tables or tables.RestaurantID != int(restaurant_id):
+    table = Table.query.get(table_id)
+    if not table or table.restaurant_id != int(restaurant_id):
         return jsonify({"error": "Bàn không hợp lệ"}), 400
 
     # Check ngày đặt không quá khứ

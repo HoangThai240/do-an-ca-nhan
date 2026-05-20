@@ -8,6 +8,8 @@ class Table(db.Model):
     status = db.Column(db.String(20), default="available")
     capacity = db.Column(db.Integer)
 
+    restaurant = db.relationship("Restaurant", backref="table")
+
 
     bookings = db.relationship('Booking', backref='table', lazy=True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('Restaurant.RestaurantID'), nullable=False)

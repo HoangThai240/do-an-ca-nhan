@@ -12,7 +12,8 @@ class Reservation(db.Model):
         db.ForeignKey("Restaurant.RestaurantID"))
     TableID = db.Column(
         db.Integer,
-        db.ForeignKey("RestaurantTables.TableID"))
+        db.ForeignKey("table.id")
+    )
 
     BookingDate = db.Column(db.Date, nullable=False)
     BookingTime = db.Column(db.Time, nullable=False)
@@ -23,4 +24,4 @@ class Reservation(db.Model):
     Status = db.Column(db.String(50))
     # relationship
     restaurant = db.relationship("Restaurant", backref="reservations")
-    table = db.relationship("Tables", backref="reservations")
+    table = db.relationship("Table", backref="reservations")
